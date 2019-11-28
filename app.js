@@ -9,10 +9,12 @@ const { errors } = require('celebrate');
 const routes = require('./routes/index');
 
 const { PORT = 3000 } = process.env;
+const { DATABASENAME = 'newsexplorer' } = process.env;
+
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect('mongodb://localhost:27017/'+DATABASENAME, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
