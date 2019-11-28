@@ -1,1 +1,72 @@
-# news-explorer-api
+# DIPLOMA
+
+## v0.0.1
+
+Проект практикума 
+
+## Ссылка на сервер [https://fortuns.ml]
+## Ссылка на сервер [http://84.201.153.53]
+
+
+## Ссылка на репозиторий [https://vadimobruchnikov.github.io/news-explorer-api.github.io/index.html]
+
+
+1. Второй пул-реквест [https://github.com/vadimobruchnikov/news-explorer-api.github.io/pull/2]
+
+
+## Для развертывания проекта установите следующие пакеты:
+
+Саму библиотеку подсистем NPM
+Скачать ее можно с официального сайта[https://nodejs.org/en/download/]
+
+## После установки всех пакетов проделайте следующее
+
+Склонируйте гит-репозиторий
+>`git clone git@github.com:vadimobruchnikov/news-explorer-api.github.io.git`
+
+Установите npm-зависимости
+>`npm install`
+
+Установите MongoDB
+>`brew tap mongodb/brew`
+>`brew install mongodb-community@4.2`
+Или воспользуйтесь официальной инструкцией[https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/]
+
+Запуск МонгоДБ (для MacOS)
+>`brew services start mongodb-community`
+## Что представляет проект
+Проект показывает как работает сервер NodeJS cовместно с Mongodb.
+
+команда 
+>`npm run start` запускает сервер на `localhost:3000`
+
+команда 
+>`npm run dev` запускает сервер на `localhost:3000` с хот релоудом;
+
+## Краткое описание API
+в ответ на запрос `GET localhost:3000/users` сервер вернёт JSON-объект из БД;
+
+в ответ на запрос `GET localhost:3000/users/8340d0ec33270a25f2413b69`, сервер вернёт JSON-объект пользователя с переданным после /users идентификатором;
+
+в ответ на запрос `GET localhost:3000/cards` сервер вернёт JSON-объект из БД;
+
+если пользователя с запрошенным идентификатором нет, API должен возвращать 404 статус ответа и `JSON: { "message": "Нет пользователя с таким id" };`
+
+при запросе на несуществующий адрес, API должен возвращать 404 статус ответа и `JSON: { "message": "Запрашиваемый ресурс не найден" }`. 
+
+## Частоиспользуемые команды Linux
+
+`sudo systemctl start nginx` запуск nginx
+
+`sudo nano /etc/nginx/sites-enabled/default` редактирование конфига nginx
+
+`sudo systemctl restart nginx` перезапуск nginx
+
+`pm2 restart app` перезапуск nodejs
+
+`sudo certbot renew --pre-hook "service nginx stop" --post-hook "service nginx start"` обновление сертификата
+
+`sudo apt-get install mc` установить mc)
+`brew install mc` под  macos
+
+`run 'select-editor'` выбор редактора
