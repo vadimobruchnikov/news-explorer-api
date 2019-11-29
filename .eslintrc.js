@@ -13,6 +13,9 @@ module.exports = {
   },
   parserOptions: {
     ecmaVersion: 2018,
+    "no-eslint-disable": 2,
+    "eslint-disable-line": 2,
+    "eslint-disable-next-line" : 2
   },
   rules: {
     "no-underscore-dangle": [
@@ -23,6 +26,6 @@ module.exports = {
         ]
       }
     ],
-    "linebreak-style": 0
+    "linebreak-style": 0,
   },
 };

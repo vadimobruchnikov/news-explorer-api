@@ -14,7 +14,7 @@ const { DATABASENAME = 'newsexplorer' } = process.env;
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/'+DATABASENAME, {
+mongoose.connect(`mongodb://localhost:27017/${DATABASENAME}`, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
