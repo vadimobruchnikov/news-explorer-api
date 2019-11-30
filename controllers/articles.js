@@ -1,35 +1,40 @@
 /* eslint-disable consistent-return */
 
-const Card = require('../models/card');
+const Articles = require('../models/article');
 const ExceptionError = require('../errors/exception-error');
 
 /**
- * Возвращает массив карточек
+ * Возвращает массив (своих) новостей
  *
- * @param {Object} req - объект запроса
- * @param {Object} res - объект ответа
+ * @param {Object} req - запрос
+ * @param {Object} res - ответ
  * @param {Object} next - следующий обработчик
  */
-module.exports.getCards = (req, res, next) => {
-  Card.find({})
+module.exports.getArticles = (req, res, next) => {
+  // Добавить условие владельца
+  Articles.find({})
     // TODO: Проверить на пустое значение
-    .then((cards) => res.send(cards))
+    .then((articles) => res.send(articles))
     .catch(next);
 };
 
 /**
- * Создает карточку по req.body { name, link }
+ * Создает новость
  *
- * @param {Object} req - объект запроса
- * @param {Object} res - объект ответа
+ * @param {Object} req - запрос
+ * @param {Object} res - ответ
  * @param {Object} next - следующий обработчик
  */
-module.exports.createCard = (req, res, next) => {
+module.exports.createArticle = (req, res, next) => {
   const owner = req.user._id;
-  const { name, link } = req.body;
-  // TODO: Проверить, что такого нет в БД
-  Card.create({ name, link, owner })
-    .then((card) => res.send({ data: card }))
+  const {
+    keyword, title, text, date, source, link, image,
+  } = req.body;
+  // TODO: Проверить, что такой нет в БД
+  Articles.create({
+    keyword, title, text, date, source, link, image, owner,
+  })
+    .then((article) => res.send(article))
     .catch(next);
 };
 
@@ -41,7 +46,7 @@ module.exports.createCard = (req, res, next) => {
  * @param {Object} next - следующий обработчик
  */
 module.exports.getCard = (req, res, next) => {
-  Card.find({ _id: req.params.id })
+  Articles.find({ _id: req.params.id })
     .then((card) => {
       if (card) {
         return res.send({ data: card });
@@ -61,12 +66,12 @@ module.exports.getCard = (req, res, next) => {
  * @param {Object} next - следующий обработчик
  */
 module.exports.deleteCard = (req, res, next) => {
-  Card.findById({ _id: req.params.id })
+  Articles.findById({ _id: req.params.id })
     .then((card) => {
       if (card) {
         // Проверяем владельца катрочки, только он может удалять
         if (card.owner.toString() === req.user._id.toString()) {
-          Card.findByIdAndRemove({ _id: req.params.id })
+          Articles.findByIdAndRemove({ _id: req.params.id })
             .then((user) => res.send({ data: user }))
             .catch(next);
         } else {
@@ -82,43 +87,44 @@ module.exports.deleteCard = (req, res, next) => {
 };
 
 /**
- * Выполняет лайк по карточке с req.user.id
+ * Сохраняет новость c articleId
  *
- * @param {Object} req - объект запроса
- * @param {Object} res - объект ответа
+ * @param {Object} req - запрос
+ * @param {Object} res - ответ
  * @param {Object} next - следующий обработчик
  */
-module.exports.doLike = (req, res, next) => {
+module.exports.doSave = (req, res, next) => {
   const { _id } = req.user;
-  const cardId = req.params.id;
-  Card.findByIdAndUpdate(cardId, { $addToSet: { likes: _id } }, { new: true })
-    .then((card) => {
-      if (!card) {
-        // return res.status(404).json({ message: `Нет карточки с id ${cardId}` });
-        throw new ExceptionError(404, res, `Нет карточки с id ${cardId}`);
+  const articleId = req.params.id;
+  // TODO Переделать процедуру на создание
+  Articles.findByIdAndUpdate(articleId, { $addToSet: { likes: _id } }, { new: true })
+    .then((article) => {
+      if (!article) {
+        throw new ExceptionError(404, res, `Нет новости с id ${articleId}`);
       }
-      return res.send(card);
+      return res.send(article);
     })
     .catch(next);
 };
 
 /**
- * Снимает лайк у карточки с req.user.id
+ * Удаляет новость c articleId (с проверкой авторства)
  *
- * @param {Object} req - объект запроса
- * @param {Object} res - объект ответа
+ * @param {Object} req - запрос
+ * @param {Object} res - ответ
  * @param {Object} next - следующий обработчик
  */
-module.exports.doDislike = (req, res, next) => {
+module.exports.doClear = (req, res, next) => {
   const { _id } = req.user;
-  const cardId = req.params.id;
-  Card.findByIdAndUpdate(cardId, { $pull: { likes: _id } }, { new: true })
-    .then((card) => {
-      if (!card) {
-        // return res.status(404).json({ message: `Нет карточки с id ${cardId}` });
-        throw new ExceptionError(404, res, `Нет карточки с id ${cardId}`);
+  const articleId = req.params.id;
+  // TODO Проверить авторство, переделать на удаление
+  Articles.findByIdAndUpdate(articleId, { $pull: { likes: _id } }, { new: true })
+    .then((article) => {
+      if (!article) {
+        // TODO Нужна ли ошибка если мы хотели удалить то, чего нет?
+        throw new ExceptionError(404, res, `Нет карточки с id ${articleId}`);
       }
-      return res.send(card);
+      return res.send(article);
     })
     .catch(next);
 };

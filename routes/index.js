@@ -1,10 +1,8 @@
 const router = require('express').Router();
-const {
-  errors,
-} = require('celebrate');
+const errors = require('celebrate');
 
 const usersRoute = require('../routes/users');
-const cardsRoute = require('../routes/cards');
+const articlesRouter = require('./articles').default;
 // const path = require("path");
 const page404 = require('../routes/page404');
 const {
@@ -26,6 +24,7 @@ const {
 router.use(requestLogger); // подключаем логгер запросов
 router.use(errorLogger); // подключаем логгер ошибок
 
+// TODO Убрать после отладки!
 router.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
@@ -42,7 +41,7 @@ router.post('/signout', logout); // выход
 router.use(auth);
 
 router.use(usersRoute); // /users
-router.use(cardsRoute); // /cards
+router.use(articlesRouter); // /articles
 
 // отдавать содержимое файлов, если указан точный путь
 // app.use(express.static(path.join(__dirname, "public")));

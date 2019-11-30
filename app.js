@@ -9,7 +9,7 @@ const { errors } = require('celebrate');
 const routes = require('./routes/index');
 
 const { PORT = 3000 } = process.env;
-const { DATABASENAME = 'newsexplorer' } = process.env;
+const { DATABASENAME = 'news-explorer' } = process.env;
 
 
 const app = express();

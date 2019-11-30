@@ -21,4 +21,33 @@ const signupInValidationSettings = celebrate({
   }),
 });
 
-module.exports = { signinInValidationSettings, signupInValidationSettings };
+// TODO Проверить типы в моделях
+const saveArticleValidationSettings = celebrate({
+  body: Joi.object().keys({
+    keyword: Joi.string().required().min(2).max(30),
+    title: Joi.string().required().min(3).max(30),
+    text: Joi.string().required().min(2).max(30),
+    date: Joi.string().required().min(2).max(30),
+    source: Joi.string().required().min(2).max(30),
+    link: Joi.string().required().min(5).max(30)
+      // TODO Заменить на регулярку
+      .uri({ allowRelative: true }),
+    image: Joi.string().required().min(5).max(30)
+      .uri({ allowRelative: true }),
+    owner: Joi.string().required().min(2).max(30),
+  }).unknown(true),
+});
+
+const getUsersValidationSettings = celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().min(2).max(30),
+    password: Joi.string().required().min(2).max(30),
+  }).unknown(true),
+});
+
+module.exports = {
+  signinInValidationSettings,
+  signupInValidationSettings,
+  saveArticleValidationSettings,
+  getUsersValidationSettings,
+};
