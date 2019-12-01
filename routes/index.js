@@ -1,8 +1,9 @@
 const router = require('express').Router();
-const errors = require('celebrate');
+// const errors = require('celebrate');
 
 const usersRoute = require('../routes/users');
-const articlesRouter = require('./articles').default;
+const articlesRoute = require('../routes/articles');
+
 // const path = require("path");
 const page404 = require('../routes/page404');
 const {
@@ -11,7 +12,7 @@ const {
 
 const {
   createUser, login, logout,
-} = require('../controllers/user');
+} = require('../controllers/users');
 
 const {
   auth,
@@ -31,7 +32,7 @@ router.get('/crash-test', () => {
   }, 0);
 });
 
-router.use(errors()); // обработчик ошибок celebrate
+// router.use(errors()); // обработчик ошибок celebrate
 
 // роуты не требующие авторизации
 router.post('/signin', signinInValidationSettings, login); // авторизация
@@ -41,7 +42,7 @@ router.post('/signout', logout); // выход
 router.use(auth);
 
 router.use(usersRoute); // /users
-router.use(articlesRouter); // /articles
+router.use(articlesRoute); // /articles
 
 // отдавать содержимое файлов, если указан точный путь
 // app.use(express.static(path.join(__dirname, "public")));

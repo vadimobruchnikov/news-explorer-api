@@ -10,7 +10,7 @@ module.exports.secretKey = 'cbfdt-gfdgr-hgfx-CRXRTX';
 module.exports.auth = function auth(req, res, next) {
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    throw new ExceptionError(401, res, 'Необходима авторизация');
+    throw new ExceptionError(401, res, 'Необходима авторизация (1)');
   }
   const token = authorization.replace('Bearer ', '');
   let payload;
@@ -18,9 +18,10 @@ module.exports.auth = function auth(req, res, next) {
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : this.auth.secretKey);
   } catch (e) {
     // отправим ошибку, если не получилось
-    const err = new Error('Необходима авторизация');
-    err.statusCode = 401;
-    err.res = res;
+    const err = new ExceptionError(401, res, 'Необходима авторизация (2)');
+    // err.statusCode = 401;
+    // err.res = res;
+    // err.message = 'Необходима авторизация2';
     next(err);
   }
   req.user = payload;

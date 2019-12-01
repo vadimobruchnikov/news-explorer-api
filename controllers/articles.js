@@ -45,7 +45,7 @@ module.exports.createArticle = (req, res, next) => {
  * @param {Object} res - объект ответа
  * @param {Object} next - следующий обработчик
  */
-module.exports.getCard = (req, res, next) => {
+module.exports.getArticle = (req, res, next) => {
   Articles.find({ _id: req.params.id })
     .then((card) => {
       if (card) {
@@ -65,7 +65,7 @@ module.exports.getCard = (req, res, next) => {
  * @param {Object} res - объект ответа
  * @param {Object} next - следующий обработчик
  */
-module.exports.deleteCard = (req, res, next) => {
+module.exports.deleteArticle = (req, res, next) => {
   Articles.findById({ _id: req.params.id })
     .then((card) => {
       if (card) {
@@ -93,7 +93,7 @@ module.exports.deleteCard = (req, res, next) => {
  * @param {Object} res - ответ
  * @param {Object} next - следующий обработчик
  */
-module.exports.doSave = (req, res, next) => {
+module.exports.saveArticle = (req, res, next) => {
   const { _id } = req.user;
   const articleId = req.params.id;
   // TODO Переделать процедуру на создание
@@ -101,28 +101,6 @@ module.exports.doSave = (req, res, next) => {
     .then((article) => {
       if (!article) {
         throw new ExceptionError(404, res, `Нет новости с id ${articleId}`);
-      }
-      return res.send(article);
-    })
-    .catch(next);
-};
-
-/**
- * Удаляет новость c articleId (с проверкой авторства)
- *
- * @param {Object} req - запрос
- * @param {Object} res - ответ
- * @param {Object} next - следующий обработчик
- */
-module.exports.doClear = (req, res, next) => {
-  const { _id } = req.user;
-  const articleId = req.params.id;
-  // TODO Проверить авторство, переделать на удаление
-  Articles.findByIdAndUpdate(articleId, { $pull: { likes: _id } }, { new: true })
-    .then((article) => {
-      if (!article) {
-        // TODO Нужна ли ошибка если мы хотели удалить то, чего нет?
-        throw new ExceptionError(404, res, `Нет карточки с id ${articleId}`);
       }
       return res.send(article);
     })

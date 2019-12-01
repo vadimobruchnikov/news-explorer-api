@@ -1,4 +1,4 @@
-const articlesRouter = require('express').Router();
+const articlesRoute = require('express').Router();
 
 const {
   getArticles, saveArticle, getArticle, deleteArticle,
@@ -8,9 +8,9 @@ const {
   saveArticleValidationSettings,
 } = require('../validators/requestValidation');
 
-articlesRouter.get('/articles', getArticles);
-articlesRouter.post('/articles', saveArticleValidationSettings, saveArticle);
-articlesRouter.get('/articles/:articleId', getArticle);
-articlesRouter.delete('/articles/:articleId', deleteArticle);
+articlesRoute.get('/articles', getArticles);
+articlesRoute.post('/articles', saveArticleValidationSettings, saveArticle);
+articlesRoute.get('/articles/:articleId', getArticle);
+articlesRoute.delete('/articles/:articleId', deleteArticle);
 
-module.exports = articlesRouter;
+module.exports = articlesRoute;
