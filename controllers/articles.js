@@ -2,6 +2,8 @@
 
 const Articles = require('../models/article');
 const ExceptionError = require('../errors/exception-error');
+const ErrorMessages = require('../resources/response-messages');
+
 
 /**
  * Возвращает массив (своих) новостей
@@ -51,7 +53,7 @@ module.exports.getArticle = (req, res, next) => {
       if (card) {
         return res.send({ data: card });
       }
-      throw new ExceptionError(404, res, `Нет карточки с id ${req.params.id}`);
+      throw new ExceptionError(404, res, `${ErrorMessages.NO_ARTICLE_ERROR} ${req.params.id}`);
       // return res.status(404).json({ message: `Нет карточки с id ${req.params.id}` });
     })
     .catch(next);
@@ -76,11 +78,11 @@ module.exports.deleteArticle = (req, res, next) => {
             .catch(next);
         } else {
           // return res.status(403).json({ message: 'Недостаточно прав' });
-          throw new ExceptionError(403, res, 'Недостаточно прав');
+          throw new ExceptionError(403, res, ErrorMessages.FORBIDDEN_ERROR);
         }
       } else {
         // return res.status(404).json({ message: 'Карточка не найдена' });
-        throw new ExceptionError(404, res, 'Карточка не найдена');
+        throw new ExceptionError(404, res, ErrorMessages.NO_ARTICLE_ERROR);
       }
     })
     .catch(next);
@@ -100,7 +102,7 @@ module.exports.saveArticle = (req, res, next) => {
   Articles.findByIdAndUpdate(articleId, { $addToSet: { likes: _id } }, { new: true })
     .then((article) => {
       if (!article) {
-        throw new ExceptionError(404, res, `Нет новости с id ${articleId}`);
+        throw new ExceptionError(404, res, ErrorMessages.NO_ARTICLE_ERROR);
       }
       return res.send(article);
     })

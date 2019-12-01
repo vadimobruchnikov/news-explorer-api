@@ -1,23 +1,24 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const { ErrorMessages } = require('../resources/response-messages');
 
 // TODO проверить схемы
 const articleSchema = new mongoose.Schema({
   keyword: {
     type: String,
-    required: [true, 'Не указана поисковая фраза[keyword]'],
+    required: [true, ErrorMessages.KEYWORD_DONT_FILL_ERROR],
     minlength: 2,
     maxlength: 30,
   },
   title: {
     type: String,
-    required: [true, 'Заголовок[title] должн быть заполнен'],
+    required: [true, ErrorMessages.TITLE_DONT_FILL_ERROR],
     minlength: 2,
     maxlength: 30,
   },
   text: {
     type: String,
-    required: [true, 'Текст статьи[text] должн быть не пустым'],
+    required: [true, ErrorMessages.TEXT_DONT_FILL_ERROR],
     minlength: 2,
     maxlength: 30,
   },
@@ -28,22 +29,22 @@ const articleSchema = new mongoose.Schema({
   },
   link: {
     type: String,
-    required: [true, 'Ссылка должна быть заполнена'],
+    required: [true, ErrorMessages.LINK_DONT_FILL_ERROR],
     validate: {
       validator(v) {
         return validator.isURL(v);
       },
-      message: () => 'Значение не является корректной ссылкой',
+      message: () => ErrorMessages.LINK_IS_INCORRECT_ERROR,
     },
   },
   image: {
     type: String,
-    required: [true, 'Ссылка на картинку (image) должна быть заполнена'],
+    required: [true, ErrorMessages.IMAGE_IS_EMPTY_ERROR],
     validate: {
       validator(v) {
         return validator.isURL(v);
       },
-      message: () => 'Значение (image) не является корректной ссылкой',
+      message: () => ErrorMessages.IMAGE_IS_INCORRECT_ERROR,
     },
   },
   owner: {

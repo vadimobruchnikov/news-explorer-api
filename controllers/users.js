@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const Users = require('../models/user');
 const { secretKey } = require('../middlewares/auth');
 const ExceptionError = require('../errors/exception-error');
+const { ErrorMessages, InfoMessages } = require('../resources/response-messages');
 
 /**
  * Создание нового пользователя по req.body { name, about, avatar, email, password }
@@ -43,7 +44,7 @@ module.exports.getUser = (req, res, next) => {
   Users.findById(id)
     .then((user) => {
       if (!user) {
-        throw new ExceptionError(404, res, `Нет пользователя с id [${id}]`);
+        throw new ExceptionError(404, res, ErrorMessages.NO_USER_ERROR);
       }
       return res.send(user);
     })
@@ -65,7 +66,7 @@ module.exports.updateUser = (req, res, next) => {
   Users.findByIdAndUpdate(_id, { name, about }, { runValidators: true, new: true })
     .then((user) => {
       if (!user) {
-        throw new ExceptionError(404, res, `Нет пользователя с id [${_id}]`);
+        throw new ExceptionError(404, res, ErrorMessages.NO_USER_ERROR);
       }
       // TODO: Проверить права
       return res.send(user);
@@ -114,4 +115,4 @@ module.exports.login = (req, res, next) => {
  * @param {Object} res - ответ
  * @param {Object} next - следующий обработчик
  */
-module.exports.logout = (req, res) => res.status(200).clearCookie('jwt').json({ message: 'Logout complete!' });
+module.exports.logout = (req, res) => res.status(200).clearCookie('jwt').json({ message: InfoMessages.LOGOUT_COMPLETE_INFO });

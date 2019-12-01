@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const ExceptionError = require('../errors/exception-error');
+const { ErrorMessages } = require('../resources/response-messages');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -18,23 +19,23 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    required: [true, 'Ссылка должна быть заполнена'],
+    required: [true, ErrorMessages.LINK_IS_EMPTY_ERROR],
     validate: {
       validator(v) {
         return validator.isURL(v);
       },
-      message: () => 'Значение не является корректной ссылкой',
+      message: () => ErrorMessages.LINK_IS_INCORRECT_ERROR,
     },
   },
   email: {
     type: String,
     unique: true,
-    required: [true, 'Значение не является корректным email-ом'],
+    required: [true, ErrorMessages.EMAIL_IS_EMPTY_ERROR],
     validate: {
       validator(v) {
         return validator.isEmail(v);
       },
-      message: () => 'Значение не является корректным email-ом',
+      message: () => ErrorMessages.EMAIL_IS_INCORRECT_ERROR,
     },
   },
   password: {
@@ -50,12 +51,12 @@ userSchema.statics.findUserByCredentials = function f(email, password, next) {
     .then((user) => {
       if (!user) {
         // return Promise.reject(new Error('Неправильные почта или пароль'));
-        throw new ExceptionError(404, 'Неправильные почта или пароль');
+        throw new ExceptionError(404, ErrorMessages.USER_OR_PASS_NOT_FOUND_ERROR);
       }
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
           // return Promise.reject(new Error('Неправильные почта или пароль'));
-          throw new ExceptionError(404, 'Неправильные почта или пароль');
+          throw new ExceptionError(404, ErrorMessages.USER_OR_PASS_NOT_FOUND_ERROR);
         }
         return user;
       });
