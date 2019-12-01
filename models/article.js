@@ -6,19 +6,19 @@ const { ErrorMessages } = require('../resources/response-messages');
 const articleSchema = new mongoose.Schema({
   keyword: {
     type: String,
-    required: [true, ErrorMessages.KEYWORD_DONT_FILL_ERROR],
+    required: [true, ErrorMessages.KEYWORD_IS_EMPTY_ERROR_ERROR],
     minlength: 2,
     maxlength: 30,
   },
   title: {
     type: String,
-    required: [true, ErrorMessages.TITLE_DONT_FILL_ERROR],
+    required: [true, ErrorMessages.TITLE_IS_EMPTY_ERROR],
     minlength: 2,
     maxlength: 30,
   },
   text: {
     type: String,
-    required: [true, ErrorMessages.TEXT_DONT_FILL_ERROR],
+    required: [true, ErrorMessages.TEXT_IS_EMPTY_ERROR],
     minlength: 2,
     maxlength: 30,
   },
@@ -29,7 +29,7 @@ const articleSchema = new mongoose.Schema({
   },
   link: {
     type: String,
-    required: [true, ErrorMessages.LINK_DONT_FILL_ERROR],
+    required: [true, ErrorMessages.LINK_IS_EMPTY_ERROR],
     validate: {
       validator(v) {
         return validator.isURL(v);

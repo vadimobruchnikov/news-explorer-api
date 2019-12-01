@@ -50,12 +50,10 @@ userSchema.statics.findUserByCredentials = function f(email, password, next) {
     .select('+password')
     .then((user) => {
       if (!user) {
-        // return Promise.reject(new Error('Неправильные почта или пароль'));
         throw new ExceptionError(404, ErrorMessages.USER_OR_PASS_NOT_FOUND_ERROR);
       }
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
-          // return Promise.reject(new Error('Неправильные почта или пароль'));
           throw new ExceptionError(404, ErrorMessages.USER_OR_PASS_NOT_FOUND_ERROR);
         }
         return user;
