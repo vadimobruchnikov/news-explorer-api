@@ -14,10 +14,13 @@ module.exports.ErrorMessages = {
   EMAIL_IS_EMPTY_ERROR: 'Email должен быть заполнен',
   EMAIL_IS_INCORRECT_ERROR: 'Значение не является корректным Email-ом',
   USER_OR_PASS_NOT_FOUND_ERROR: 'Неправильные почта или пароль',
+  SERVER_ERROR: 'На сервере произошла ошибка',
+  MONGO_CONNECTION_ERROR: 'MongoDB database connection error',
 };
 
 module.exports.InfoMessages = {
   LOGOUT_COMPLETE_INFO: 'Вы успешно вышли',
+  SUCCESS_CONNECT_TO_MONGO: 'Succesfully connected to MongoDB Database',
 };
 
 module.exports.DebugMessages = {
