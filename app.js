@@ -21,8 +21,7 @@ mongoose.connect(`mongodb://localhost:27017/${DATABASENAME}`, {
 });
 
 mongoose.connection.on('error', (err) => {
-  console.error(`Database Connection Error: ${err}`);
-  console.error('Do not run MongoDB server.');
+  console.error(`MongoDB database connection error: ${err}`);
   process.exit(2);
 });
 
@@ -44,22 +43,6 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use('/', routes);
-
-// обработчики ошибок
-app.use(errors()); // обработчик ошибок celebrate
-
-// глобальная функция отработки ошибок
-app.use((err, req, res) => {
-  const { statusCode = 500, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      // проверяем статус и выставляем сообщение в зависимости от него
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-});
 
 app.listen(PORT, (err) => {
   if (err) {

@@ -21,9 +21,7 @@ const {
 } = require('../middlewares/logger');
 
 router.use(requestLogger); // подключаем логгер запросов
-router.use(errorLogger); // подключаем логгер ошибок
 router.get('/crash-test', crashTest); // TODO Убрать после отладки!
-router.use(errors()); // обработчик ошибок celebrate
 
 // роуты не требующие авторизации
 router.post('/signin', signinInValidationSettings, login); // авторизация
@@ -38,6 +36,21 @@ router.use(articlesRoute); // /articles
 // отдавать содержимое файлов, если указан точный путь
 // app.use(express.static(path.join(__dirname, "public")));
 
+router.use(errorLogger); // подключаем логгер ошибок
+router.use(errors());
 router.use(page404);
+
+// глобальная функция отработки ошибок
+router.use((err, req, res) => {
+  const { statusCode = 500, message } = err;
+  res
+    .status(statusCode)
+    .send({
+      // проверяем статус и выставляем сообщение в зависимости от него
+      message: statusCode === 500
+        ? 'На сервере произошла ошибка'
+        : message,
+    });
+});
 
 module.exports = router;
