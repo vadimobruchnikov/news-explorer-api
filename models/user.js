@@ -11,22 +11,6 @@ const userSchema = new mongoose.Schema({
     minlength: 2,
     maxlength: 30,
   },
-  about: {
-    type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 30,
-  },
-  avatar: {
-    type: String,
-    required: [true, ErrorMessages.LINK_IS_EMPTY_ERROR],
-    validate: {
-      validator(v) {
-        return validator.isURL(v);
-      },
-      message: () => ErrorMessages.LINK_IS_INCORRECT_ERROR,
-    },
-  },
   email: {
     type: String,
     unique: true,
