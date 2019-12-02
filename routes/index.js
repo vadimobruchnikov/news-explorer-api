@@ -4,7 +4,6 @@ const { crashTest } = require('../helpers/crash-test');
 
 const usersRoute = require('../routes/users');
 const articlesRoute = require('../routes/articles');
-
 // const path = require("path");
 const page404 = require('../errors/page404');
 const {
@@ -27,19 +26,14 @@ router.get('/crash-test', crashTest); // TODO Убрать после отлад
 router.post('/signin', signinInValidationSettings, login); // авторизация
 router.post('/signup', signupInValidationSettings, createUser); // регистрация
 router.post('/signout', logout); // выход
-
 router.use(auth);
-
 router.use(usersRoute); // /users
 router.use(articlesRoute); // /articles
-
 // отдавать содержимое файлов, если указан точный путь
 // app.use(express.static(path.join(__dirname, "public")));
-
 router.use(errorLogger); // подключаем логгер ошибок
 router.use(errors());
 router.use(page404);
-
 // глобальная функция отработки ошибок
 router.use((err, req, res) => {
   const { statusCode = 500, message } = err;
