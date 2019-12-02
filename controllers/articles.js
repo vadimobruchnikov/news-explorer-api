@@ -1,9 +1,7 @@
 /* eslint-disable consistent-return */
-
 const Articles = require('../models/article');
 const ExceptionError = require('../errors/exception-error');
 const ErrorMessages = require('../resources/response-messages');
-
 
 /**
  * Возвращает массив (своих) новостей
@@ -33,6 +31,7 @@ module.exports.createArticle = (req, res, next) => {
     keyword, title, text, date, source, link, image,
   } = req.body;
   // TODO: Проверить, что такой нет в БД
+  // Articles.find({ _id: req.params.id })
   Articles.create({
     keyword, title, text, date, source, link, image, owner,
   })
@@ -43,8 +42,8 @@ module.exports.createArticle = (req, res, next) => {
 /**
  * Получает конкретную карточку по req.params.id
  *
- * @param {Object} req - объект запроса
- * @param {Object} res - объект ответа
+ * @param {Object} req - запрос
+ * @param {Object} res - ответ
  * @param {Object} next - следующий обработчик
  */
 module.exports.getArticle = (req, res, next) => {
@@ -54,7 +53,6 @@ module.exports.getArticle = (req, res, next) => {
         return res.send({ data: card });
       }
       throw new ExceptionError(404, res, `${ErrorMessages.NO_ARTICLE_ERROR} ${req.params.id}`);
-      // return res.status(404).json({ message: `Нет карточки с id ${req.params.id}` });
     })
     .catch(next);
 };
@@ -63,25 +61,23 @@ module.exports.getArticle = (req, res, next) => {
  * Удаляет конкретную карточку по req.params.id
  * при удалении проверяется владелец карточки из req.user._id
  *
- * @param {Object} req - объект запроса
- * @param {Object} res - объект ответа
+ * @param {Object} req - запрос
+ * @param {Object} res - ответ
  * @param {Object} next - следующий обработчик
  */
 module.exports.deleteArticle = (req, res, next) => {
   Articles.findById({ _id: req.params.id })
-    .then((card) => {
-      if (card) {
-        // Проверяем владельца катрочки, только он может удалять
-        if (card.owner.toString() === req.user._id.toString()) {
+    .then((article) => {
+      if (article) {
+        // Проверяем владельца статьи, только он может удалять
+        if (article.owner.toString() === req.user._id.toString()) {
           Articles.findByIdAndRemove({ _id: req.params.id })
             .then((user) => res.send({ data: user }))
             .catch(next);
         } else {
-          // return res.status(403).json({ message: 'Недостаточно прав' });
           throw new ExceptionError(403, res, ErrorMessages.FORBIDDEN_ERROR);
         }
       } else {
-        // return res.status(404).json({ message: 'Карточка не найдена' });
         throw new ExceptionError(404, res, ErrorMessages.NO_ARTICLE_ERROR);
       }
     })
@@ -99,7 +95,7 @@ module.exports.saveArticle = (req, res, next) => {
   const { _id } = req.user;
   const articleId = req.params.id;
   // TODO Переделать процедуру на создание
-  Articles.findByIdAndUpdate(articleId, { $addToSet: { likes: _id } }, { new: true })
+  Articles.findByIdAndUpdate(articleId, { $addToSet: { likes: _id } }, { runValidators: true, new: true })
     .then((article) => {
       if (!article) {
         throw new ExceptionError(404, res, ErrorMessages.NO_ARTICLE_ERROR);
