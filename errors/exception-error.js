@@ -1,3 +1,6 @@
+/*
+ * Сознательно не расширены классы ошибок, а сделан один универсальный
+ */
 class ExceptionError extends Error {
   constructor(statusCode = 500, res, message) {
     super(message);

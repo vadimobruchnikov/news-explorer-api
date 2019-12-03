@@ -19,7 +19,6 @@ const articleSchema = new mongoose.Schema({
     type: String,
     required: [true, ErrorMessages.TEXT_IS_EMPTY_ERROR],
     minlength: 2,
-    maxlength: 30,
   },
   date: {
     type: Date,
@@ -27,6 +26,16 @@ const articleSchema = new mongoose.Schema({
     default: Date.now,
   },
   link: {
+    type: String,
+    required: [true, ErrorMessages.LINK_IS_EMPTY_ERROR],
+    validate: {
+      validator(v) {
+        return validator.isURL(v);
+      },
+      message: () => ErrorMessages.LINK_IS_INCORRECT_ERROR,
+    },
+  },
+  source: {
     type: String,
     required: [true, ErrorMessages.LINK_IS_EMPTY_ERROR],
     validate: {
@@ -53,7 +62,6 @@ const articleSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    required: true,
     default: Date.now,
   },
 

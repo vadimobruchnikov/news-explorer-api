@@ -49,8 +49,8 @@ module.exports.createUser = (req, res, next) => {
  * @param {Object} next - следующий обработчик
  */
 module.exports.getUser = (req, res, next) => {
-  const { id } = req.params;
-  Users.findById(id)
+  const id = req.user._id;
+  Users.findById({ _id: id })
     .then((user) => {
       if (!user) {
         throw new ExceptionError(404, res, ErrorMessages.NO_USER_ERROR);
@@ -110,4 +110,6 @@ module.exports.login = (req, res, next) => {
  * @param {Object} res - ответ
  * @param {Object} next - следующий обработчик
  */
-module.exports.logout = (req, res) => res.status(200).clearCookie('jwt').json({ message: InfoMessages.LOGOUT_COMPLETE_INFO });
+module.exports.logout = (req, res) => {
+  res.status(200).clearCookie('jwt').json({ message: InfoMessages.LOGOUT_COMPLETE_INFO });
+};

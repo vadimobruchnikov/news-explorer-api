@@ -31,7 +31,8 @@ module.exports.createArticle = (req, res, next) => {
     keyword, title, text, date, source, link, image,
   } = req.body;
   // TODO: Проверить, что такой еще нет в БД
-  // Articles.find({ _id: req.params.id })
+  // Articles.find({ })
+  console.log(2);
   Articles.create({
     keyword, title, text, date, source, link, image, owner,
   })

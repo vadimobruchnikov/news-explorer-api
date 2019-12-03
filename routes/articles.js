@@ -1,7 +1,7 @@
 const articlesRoute = require('express').Router();
 
 const {
-  getArticles, saveArticle, getArticle, deleteArticle,
+  getArticles, createArticle, getArticle, deleteArticle,
 } = require('../controllers/articles');
 
 const {
@@ -9,7 +9,7 @@ const {
 } = require('../validators/requestValidation');
 
 articlesRoute.get('/articles', getArticles);
-articlesRoute.post('/articles', saveArticleValidationSettings, saveArticle);
+articlesRoute.post('/articles', saveArticleValidationSettings, createArticle);
 articlesRoute.get('/articles/:articleId', getArticle);
 articlesRoute.delete('/articles/:articleId', deleteArticle);
 
