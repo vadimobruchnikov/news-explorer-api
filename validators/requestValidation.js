@@ -11,10 +11,8 @@ const signinInValidationSettings = celebrate({
 
 const signupInValidationSettings = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2)
-      .max(30),
-    about: Joi.string().required().max(50),
-    avatar: Joi.string().required().max(50).regex(/https?:\/\/(?:[-\w]+\.)?([-\w]+)\.\w+(?:\.\w+)?\/?.*/),
+    name: Joi.string().required().min(2).max(30),
+    // avatar: Joi.string().required().max(50).regex(/https?:\/\/(?:[-\w]+\.)?([-\w]+)\.\w+(?:\.\w+)?\/?.*/),
     // avatar: Joi.string().required().max(50).uri({ allowRelative: true }),
     email: Joi.string().required().max(120).email(),
     password: Joi.string().required().min(2).max(30),
@@ -38,16 +36,8 @@ const saveArticleValidationSettings = celebrate({
   }).unknown(true),
 });
 
-const getUsersValidationSettings = celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().min(2).max(30),
-    password: Joi.string().required().min(2).max(30),
-  }).unknown(true),
-});
-
 module.exports = {
   signinInValidationSettings,
   signupInValidationSettings,
   saveArticleValidationSettings,
-  getUsersValidationSettings,
 };

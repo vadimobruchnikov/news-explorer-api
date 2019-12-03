@@ -17,17 +17,26 @@ const { ErrorMessages, InfoMessages } = require('../resources/response-messages'
  */
 module.exports.createUser = (req, res, next) => {
   const { name, email, password } = req.body;
-  // хешируем пароль
-  bcrypt.hash(password, 10)
-    .then((hash) => Users.create({
-      name,
-      email,
-      password: hash, // записываем хеш в базу
-    }))
-    .then((user) => {
-      // Не возвращаем хэш пароля
-      delete user._doc.password;
-      return res.send(user);
+
+  Users.findOne({ email })
+    .then((findUser) => {
+      if (findUser) {
+        // выбран код ошибки 409 - Conflict
+        throw new ExceptionError(409, res, ErrorMessages.FOUNT_DUPLICATE_USER_ERROR);
+      }
+      // хешируем пароль
+      bcrypt.hash(password, 10)
+        .then((hash) => Users.create({
+          name,
+          email,
+          password: hash,
+        }))
+        .then((user) => {
+          // Не возвращаем хэш пароля
+          delete user._doc.password;
+          return res.send(user);
+        })
+        .catch(next);
     })
     .catch(next);
 };
@@ -46,7 +55,7 @@ module.exports.getUser = (req, res, next) => {
       if (!user) {
         throw new ExceptionError(404, res, ErrorMessages.NO_USER_ERROR);
       }
-      return res.send(user);
+      return res.send({ data: user });
     })
     .catch(next);
 };
@@ -69,22 +78,8 @@ module.exports.updateUser = (req, res, next) => {
         throw new ExceptionError(404, res, ErrorMessages.NO_USER_ERROR);
       }
       // TODO: Проверить права
-      return res.send(user);
+      return res.send({ dat: user });
     })
-    .catch(next);
-};
-
-/**
- * Возвращает список пользователей
- *
- * @param {Object} req - запрос
- * @param {Object} res - ответ
- * @param {Object} next - следующий обработчик
- */
-module.exports.getUsers = (req, res, next) => {
-  Users.find({})
-    // TODO: Проверить на пустой ответ
-    .then((users) => res.send(users))
     .catch(next);
 };
 

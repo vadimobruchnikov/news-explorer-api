@@ -2,6 +2,7 @@ module.exports.ErrorMessages = {
   AUTORIZATION_ERROR: 'Требуется авторизация',
   NO_ARTICLE_ERROR: 'Нет карточки c Id ',
   NO_USER_ERROR: 'Нет такого пользователя',
+  FOUNT_DUPLICATE_USER_ERROR: 'Уже есть пользователь с такой почтой',
   NOT_FOUND_ERROR: 'Запрашиваемый ресурс не найден',
   FORBIDDEN_ERROR: 'У вас недостаточно прав',
   KEYWORD_IS_EMPTY_ERROR: 'Не указана поисковая фраза[keyword]',

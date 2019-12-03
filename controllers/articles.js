@@ -14,7 +14,7 @@ module.exports.getArticles = (req, res, next) => {
   // Добавить условие владельца
   Articles.find({})
     // TODO: Проверить на пустое значение
-    .then((articles) => res.send(articles))
+    .then((articles) => res.send({ data: articles }))
     .catch(next);
 };
 
@@ -30,12 +30,12 @@ module.exports.createArticle = (req, res, next) => {
   const {
     keyword, title, text, date, source, link, image,
   } = req.body;
-  // TODO: Проверить, что такой нет в БД
+  // TODO: Проверить, что такой еще нет в БД
   // Articles.find({ _id: req.params.id })
   Articles.create({
     keyword, title, text, date, source, link, image, owner,
   })
-    .then((article) => res.send(article))
+    .then((article) => res.send({ data: article }))
     .catch(next);
 };
 
@@ -100,7 +100,7 @@ module.exports.saveArticle = (req, res, next) => {
       if (!article) {
         throw new ExceptionError(404, res, ErrorMessages.NO_ARTICLE_ERROR);
       }
-      return res.send(article);
+      return res.send({ data: article });
     })
     .catch(next);
 };
