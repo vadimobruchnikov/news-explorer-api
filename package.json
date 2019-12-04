@@ -8,7 +8,8 @@
     "start-server": "node server.js",
     "dev": "nodemon app.js",
     "test": "jest",
-    "deploy": "npm run build && scp -r ./dist/* vadimobruchnikov@84.201.153.53:~/frontend"
+    "deploy-front": "npm run build && scp -r ./dist/* vadimobruchnikov@84.201.153.53:~/frontend",
+    "deploy-back": "npm run build && scp -r ./* vadimobruchnikov@84.201.153.53:~/backend"
   },
   "keywords": [],
   "author": "Vadim Obruchnikov",

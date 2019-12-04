@@ -18,7 +18,6 @@ module.exports.auth = function auth(req, res, next) {
   try {
     payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : devSecretKey);
   } catch (e) {
-    console.log(e);
     const err = new ExceptionError(401, res, ErrorMessages.AUTORIZATION_ERROR);
     next(err);
   }
