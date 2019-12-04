@@ -5,8 +5,8 @@ const { ErrorMessages } = require('../resources/response-messages');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-const secretKey = 'cbfdt-gfdgr-hgfx-CRXRTX';
-module.exports.secretKey = secretKey;
+const devSecretKey = 'cbfdt-gfdgr-hgfx-CRXRTX';
+module.exports.secretKey = devSecretKey;
 
 module.exports.auth = function auth(req, res, next) {
   const { authorization } = req.headers;
@@ -16,7 +16,7 @@ module.exports.auth = function auth(req, res, next) {
   const token = authorization.replace('Bearer ', '');
   let payload;
   try {
-    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : secretKey);
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : devSecretKey);
   } catch (e) {
     console.log(e);
     const err = new ExceptionError(401, res, ErrorMessages.AUTORIZATION_ERROR);
