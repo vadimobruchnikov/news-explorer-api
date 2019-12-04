@@ -51,6 +51,11 @@ Back-End: VPS Linux + NodeJS + MongoDB + JS(ES6) + NPM + HTTPS(SSL Certificate)
 >`>db.createCollection("articles")`
 >`>db.createCollection("users")`
 
+На сервере желательно установить глобальный модуль PM2
+>`sudo npm install pm2 -g`
+>`pm2 start app.js`
+>`pm2 startup`
+
 ## Как запустить приложение
 
 команда
@@ -60,15 +65,64 @@ Back-End: VPS Linux + NodeJS + MongoDB + JS(ES6) + NPM + HTTPS(SSL Certificate)
 >`npm run dev` запускает сервер на `localhost:3000` с хот релоудом;
 
 ## Краткое описание API
-в ответ на запрос `GET localhost:3000/users` сервер вернёт JSON-объект из БД;
 
-в ответ на запрос `GET localhost:3000/users/8340d0ec33270a25f2413b69`, сервер вернёт JSON-объект пользователя с переданным после /users идентификатором;
 
-если пользователя с запрошенным идентификатором нет, API должен возвращать 404 статус ответа и `JSON: { "message": "Нет пользователя с таким id" };`
+#Регистрация нового пользователя
 
-в ответ на запрос `GET localhost:3000/articles` сервер вернёт JSON-объект из БД;
+>`GET localhost:3000/signup`
 
-при запросе на несуществующий адрес, API должен возвращать 404 статус ответа и `JSON: { "message": "Запрашиваемый ресурс не найден" }`.
+Входящие данные JSON { email, password }
+
+В ответ получаем JSON { data: объект созданного пользователя }
+
+
+#Авторизация пользователя
+
+>`GET localhost:3000/signup`
+
+Входящие данные JSON { email, password }
+
+В ответ получаем JSON { data: объект созданного пользователя }
+
+
+#Сброс авторизации пользователя
+
+>`GET localhost:3000/signout`
+
+В ответ получаем JSON { message: Сообщение о статусе выхода }
+
+
+#Получение текущего пользователя
+
+>`GET localhost:3000/users/me`
+
+В ответ получаем JSON { data: объект текущего пользователя }
+
+
+#Получение всех статей
+
+>`GET localhost:3000/articles`
+
+В ответ получаем JSON { data: массив объектов карточек новостей }
+
+
+#Запись статьи в базу
+
+>`POST localhost:3000/articles`
+
+Входящие данные JSON { keyword, title, text, date, source, link, image }
+
+В ответ получаем JSON { data: объект добавленной карточки }
+
+
+#Удаление статьи из базы
+
+>`DELETE localhost:3000/articles/articleId`
+
+Входящие данные articleId - id объекта mongodb
+
+В ответ получаем JSON { data: объект удаленной карточки }
+
 
 ## ШПАРГАЛКА ## Частоиспользуемые команды Linux
 
@@ -83,6 +137,9 @@ Back-End: VPS Linux + NodeJS + MongoDB + JS(ES6) + NPM + HTTPS(SSL Certificate)
 `sudo certbot renew --pre-hook "service nginx stop" --post-hook "service nginx start"` обновление сертификата
 
 `sudo apt-get install mc` установить mc)
+
 `brew install mc` под  macos
 
 `run 'select-editor'` выбор редактора
+
+
