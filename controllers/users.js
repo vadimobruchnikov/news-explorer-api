@@ -9,9 +9,9 @@ const ExceptionError = require('../errors/exception-error');
 const { ErrorMessages, InfoMessages } = require('../resources/response-messages');
 
 /**
- * Создание нового пользователя по req.body { name, about, avatar, email, password }
+ * Создание нового пользователя
  *
- * @param {Object} req - запрос body {name, about}
+ * @param {Object} req - запрос
  * @param {Object} res - ответ
  * @param {Object} next - следующий обработчик
  */

@@ -19,7 +19,6 @@ const signupInValidationSettings = celebrate({
   }),
 });
 
-// TODO Проверить типы в моделях
 const saveArticleValidationSettings = celebrate({
   body: Joi.object().keys({
     keyword: Joi.string().required().min(2).max(30),

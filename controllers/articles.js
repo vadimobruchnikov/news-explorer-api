@@ -30,9 +30,6 @@ module.exports.createArticle = (req, res, next) => {
   const {
     keyword, title, text, date, source, link, image,
   } = req.body;
-  // TODO: Проверить, что такой еще нет в БД
-  // Articles.find({ })
-  console.log(2);
   Articles.create({
     keyword, title, text, date, source, link, image, owner,
   })
@@ -67,13 +64,14 @@ module.exports.getArticle = (req, res, next) => {
  * @param {Object} next - следующий обработчик
  */
 module.exports.deleteArticle = (req, res, next) => {
-  Articles.findById({ _id: req.params.id })
+  const { articleId } = req.params;
+  Articles.findById(articleId)
     .then((article) => {
       if (article) {
         // Проверяем владельца статьи, только он может удалять
         if (article.owner.toString() === req.user._id.toString()) {
-          Articles.findByIdAndRemove({ _id: req.params.id })
-            .then((user) => res.send({ data: user }))
+          Articles.findByIdAndRemove(articleId)
+            .then((deletedArticle) => res.send({ data: deletedArticle }))
             .catch(next);
         } else {
           throw new ExceptionError(403, res, ErrorMessages.FORBIDDEN_ERROR);
@@ -81,27 +79,6 @@ module.exports.deleteArticle = (req, res, next) => {
       } else {
         throw new ExceptionError(404, res, ErrorMessages.NO_ARTICLE_ERROR);
       }
-    })
-    .catch(next);
-};
-
-/**
- * Сохраняет новость c articleId
- *
- * @param {Object} req - запрос
- * @param {Object} res - ответ
- * @param {Object} next - следующий обработчик
- */
-module.exports.saveArticle = (req, res, next) => {
-  const { _id } = req.user;
-  const articleId = req.params.id;
-  // TODO Переделать процедуру на создание
-  Articles.findByIdAndUpdate(articleId, { $addToSet: { likes: _id } }, { runValidators: true, new: true })
-    .then((article) => {
-      if (!article) {
-        throw new ExceptionError(404, res, ErrorMessages.NO_ARTICLE_ERROR);
-      }
-      return res.send({ data: article });
     })
     .catch(next);
 };
