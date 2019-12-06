@@ -1,7 +1,8 @@
 /* eslint-disable consistent-return */
 const Articles = require('../models/article');
-const ExceptionError = require('../errors/exception-error');
 const ErrorMessages = require('../resources/response-messages');
+const NotFoundError = require('../errors/not-found-error');
+const ForbiddenError = require('../errors/forbidden-error');
 
 /**
  * Возвращает массив (своих) новостей
@@ -50,7 +51,7 @@ module.exports.getArticle = (req, res, next) => {
       if (card) {
         return res.send({ data: card });
       }
-      throw new ExceptionError(404, res, `${ErrorMessages.NO_ARTICLE_ERROR} ${req.params.id}`);
+      throw new NotFoundError(`${ErrorMessages.NO_ARTICLE_ERROR} ${req.params.id}`);
     })
     .catch(next);
 };
@@ -74,10 +75,10 @@ module.exports.deleteArticle = (req, res, next) => {
             .then((deletedArticle) => res.send({ data: deletedArticle }))
             .catch(next);
         } else {
-          throw new ExceptionError(403, res, ErrorMessages.FORBIDDEN_ERROR);
+          throw new ForbiddenError(ErrorMessages.FORBIDDEN_ERROR);
         }
       } else {
-        throw new ExceptionError(404, res, ErrorMessages.NO_ARTICLE_ERROR);
+        throw new NotFoundError(ErrorMessages.NO_ARTICLE_ERROR);
       }
     })
     .catch(next);

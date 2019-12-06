@@ -15,8 +15,8 @@ Frontend для этого проекта можно найти на следу�
 Front-End: HTML5 + CSS + JS(ES6, REST API, AJAX, JSON) + Babel + Webpack + NPM
 Back-End: VPS Linux + NodeJS + MongoDB + JS(ES6) + NPM + HTTPS(SSL Certificate)
 
-## Ссылка на сервер [https://fortuns.ml]
-## Ссылка на сервер [http://84.201.153.53]
+## Ссылка на frontend [https://fortuns.ml]
+## Ссылка на backend(api)  [https://api.fortuns.ml]
 
 ## Ссылка на репозиторий [https://vadimobruchnikov.github.io/news-explorer-api.github.io/index.html]
 

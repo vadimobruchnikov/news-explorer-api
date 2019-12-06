@@ -1,5 +1,5 @@
 module.exports.ErrorMessages = {
-  AUTORIZATION_ERROR: 'Ошибка овторизации',
+  UNAUTORIZED_ERROR: 'Ошибка овторизации',
   AUTORIZATION_NEEDED_ERROR: 'Требуется авторизация',
   NO_ARTICLE_ERROR: 'Нет карточки c Id ',
   NO_USER_ERROR: 'Нет такого пользователя',

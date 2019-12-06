@@ -5,8 +5,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Users = require('../models/user');
 const { secretKey } = require('../middlewares/auth');
-const ExceptionError = require('../errors/exception-error');
 const { ErrorMessages, InfoMessages } = require('../resources/response-messages');
+const ConflictError = require('../errors/conflict-error');
+const NotFoundError = require('../errors/not-found-error');
 
 /**
  * Создание нового пользователя
@@ -22,7 +23,7 @@ module.exports.createUser = (req, res, next) => {
     .then((findUser) => {
       if (findUser) {
         // выбран код ошибки 409 - Conflict
-        throw new ExceptionError(409, res, ErrorMessages.FOUNT_DUPLICATE_USER_ERROR);
+        throw new ConflictError(ErrorMessages.FOUNT_DUPLICATE_USER_ERROR);
       }
       // хешируем пароль
       bcrypt.hash(password, 10)
@@ -53,7 +54,7 @@ module.exports.getUser = (req, res, next) => {
   Users.findById({ _id: id })
     .then((user) => {
       if (!user) {
-        throw new ExceptionError(404, res, ErrorMessages.NO_USER_ERROR);
+        throw new NotFoundError(ErrorMessages.NO_USER_ERROR);
       }
       return res.send({ data: user });
     })
@@ -75,7 +76,7 @@ module.exports.updateUser = (req, res, next) => {
   Users.findByIdAndUpdate(_id, { name, about }, { runValidators: true, new: true })
     .then((user) => {
       if (!user) {
-        throw new ExceptionError(404, res, ErrorMessages.NO_USER_ERROR);
+        throw new NotFoundError(ErrorMessages.NO_USER_ERROR);
       }
       // TODO: Проверить права
       return res.send({ dat: user });
