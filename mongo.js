@@ -4,11 +4,9 @@ const mongoose = require('mongoose');
 
 const { ErrorMessages, InfoMessages } = require('./resources/response-messages');
 
-const { DATABASENAME = 'news-explorer' } = process.env;
-const { MONGOHOST = 'localhost' } = process.env;
-const { MONGOPORT = 27017 } = process.env;
+const { MONGODB_ADDRESS = 'mongodb://localhost:27017/news-explorer' } = process.env;
 
-mongoose.connect(`mongodb://${MONGOHOST}:${MONGOPORT}/${DATABASENAME}`, {
+mongoose.connect(MONGODB_ADDRESS, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
