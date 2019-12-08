@@ -31,6 +31,7 @@ module.exports.createArticle = (req, res, next) => {
   const {
     keyword, title, text, date, source, link, image,
   } = req.body;
+  console.dir(req);
   Articles.create({
     keyword, title, text, date, source, link, image, owner,
   })
@@ -69,6 +70,7 @@ module.exports.deleteArticle = (req, res, next) => {
   Articles.findById(articleId)
     .then((article) => {
       if (article) {
+        console.dir(req);
         // Проверяем владельца статьи, только он может удалять
         if (article.owner.toString() === req.user._id.toString()) {
           Articles.findByIdAndRemove(articleId)

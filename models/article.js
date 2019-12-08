@@ -55,11 +55,6 @@ const articleSchema = new mongoose.Schema({
       message: () => ErrorMessages.IMAGE_IS_INCORRECT_ERROR,
     },
   },
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'user',
-    required: true,
-  },
   createdAt: {
     type: Date,
     default: Date.now,

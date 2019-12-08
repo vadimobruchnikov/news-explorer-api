@@ -30,8 +30,7 @@ const saveArticleValidationSettings = celebrate({
       // TODO Заменить на регулярку
       .uri({ allowRelative: true }),
     image: Joi.string().required().min(5)
-      .uri({ allowRelative: true }),
-    owner: Joi.string().required().min(24).max(24),
+      .uri({ allowRelative: true })
   }).unknown(true),
 });
 
