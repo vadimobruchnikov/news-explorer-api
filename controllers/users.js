@@ -51,7 +51,6 @@ module.exports.createUser = (req, res, next) => {
  */
 module.exports.getUser = (req, res, next) => {
   const id = req.user._id;
-  console.dir(req);
   Users.findById({ _id: id })
     .then((user) => {
       if (!user) {

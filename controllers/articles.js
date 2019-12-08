@@ -1,8 +1,8 @@
 /* eslint-disable consistent-return */
 const Articles = require('../models/article');
-const ErrorMessages = require('../resources/response-messages');
 const NotFoundError = require('../errors/not-found-error');
 const ForbiddenError = require('../errors/forbidden-error');
+const { ErrorMessages } = require('../resources/response-messages');
 
 /**
  * Возвращает массив (своих) новостей
@@ -11,7 +11,7 @@ const ForbiddenError = require('../errors/forbidden-error');
  * @param {Object} res - ответ
  * @param {Object} next - следующий обработчик
  */
-module.exports.getArticles = (req, res, next) => {
+const getArticles = (req, res, next) => {
   // Добавить условие владельца
   Articles.find({})
     // TODO: Проверить на пустое значение
@@ -26,12 +26,11 @@ module.exports.getArticles = (req, res, next) => {
  * @param {Object} res - ответ
  * @param {Object} next - следующий обработчик
  */
-module.exports.createArticle = (req, res, next) => {
+const createArticle = (req, res, next) => {
   const owner = req.user._id;
   const {
     keyword, title, text, date, source, link, image,
   } = req.body;
-  console.dir(req);
   Articles.create({
     keyword, title, text, date, source, link, image, owner,
   })
@@ -46,7 +45,7 @@ module.exports.createArticle = (req, res, next) => {
  * @param {Object} res - ответ
  * @param {Object} next - следующий обработчик
  */
-module.exports.getArticle = (req, res, next) => {
+const getArticle = (req, res, next) => {
   Articles.find({ _id: req.params.id })
     .then((card) => {
       if (card) {
@@ -65,12 +64,11 @@ module.exports.getArticle = (req, res, next) => {
  * @param {Object} res - ответ
  * @param {Object} next - следующий обработчик
  */
-module.exports.deleteArticle = (req, res, next) => {
+const deleteArticle = (req, res, next) => {
   const { articleId } = req.params;
-  Articles.findById(articleId)
+  Articles.findById({ _id: articleId })
     .then((article) => {
       if (article) {
-        console.dir(req);
         // Проверяем владельца статьи, только он может удалять
         if (article.owner.toString() === req.user._id.toString()) {
           Articles.findByIdAndRemove(articleId)
@@ -84,4 +82,8 @@ module.exports.deleteArticle = (req, res, next) => {
       }
     })
     .catch(next);
+};
+
+module.exports = {
+  getArticles, createArticle, getArticle, deleteArticle,
 };
