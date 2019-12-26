@@ -7,10 +7,13 @@ const { createUser, login, logout } = require('../controllers/users');
 const { auth } = require('../middlewares/auth');
 const notFoundError = require('../middlewares/not-found-error');
 const { InfoMessages } = require('../resources/response-messages');
+const { cors } = require('../middlewares/cors');
 
 const indexPage = (req, res) => {
   res.send({ message: InfoMessages.INDEX_MESSAGE_INFO });
 };
+
+router.use(cors);
 
 router.get('/', indexPage);
 router.get('/crash-test', crashTest); // TODO Убрать после отладки!
