@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
-require('dotenv').config();
 const mongoose = require('mongoose');
 
 const { ErrorMessages, InfoMessages } = require('./resources/response-messages');
 
-const { MONGODB_ADDRESS = 'mongodb://localhost:27017/news-explorer' } = process.env;
+const { NODE_ENV, MONGODB_ADDRESS } = process.env;
+const { DEV_MONGO_DB } = require('./config/dev-env-variables');
 
-mongoose.connect(MONGODB_ADDRESS, {
+mongoose.connect(NODE_ENV === 'production' ? MONGODB_ADDRESS : DEV_MONGO_DB, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,

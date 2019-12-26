@@ -41,6 +41,7 @@ HTTPS сертификат нельзя сразу выпускать(так с�
 
 Склонируйте гит-репозиторий
 >`git clone git@github.com:vadimobruchnikov/news-explorer-api.github.io.git`
+>`git clone https://github.com/vadimobruchnikov/news-explorer-api.git`
 
 Установите npm-зависимости
 >`npm install`
