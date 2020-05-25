@@ -23,7 +23,6 @@ module.exports.ErrorMessages = {
 module.exports.InfoMessages = {
   LOGOUT_COMPLETE_INFO: 'Вы успешно вышли',
   SUCCESS_CONNECT_TO_MONGO: 'Succesfully connected to MongoDB Database',
-  INDEX_MESSAGE_INFO: 'API news-explorer v0.0.1',
 };
 
 module.exports.DebugMessages = {

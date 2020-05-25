@@ -8,7 +8,7 @@
     "start-server": "node server.js",
     "dev": "nodemon app.js",
     "test": "jest",
-    "deploy-front": "npm run build && scp -r ./dist/* vadimobruchnikov@45.67.57.229:~/frontend",
+    "deploy-front": "npm run build && scp -r ./dist/* vadimobruchnikov@84.201.153.53:~/frontend",
     "deploy-back": "scp -r ./* ssh root@45.67.57.229:~/backend"
   },
   "keywords": [],

@@ -15,14 +15,6 @@ Frontend для этого проекта можно найти на следу�
 Front-End: HTML5 + CSS + JS(ES6, REST API, AJAX, JSON) + Babel + Webpack + NPM
 Back-End: VPS Linux + NodeJS + MongoDB + JS(ES6) + NPM + HTTPS(SSL Certificate)
 
-Новые ссылки (возможно ДНС уже обновится)
-## Ссылка на frontend [http://cloudsnews.ru]
-## Ссылка на backend(api)  [http://api.cloudsnews.ru]
-## IP нового сервера 45.67.57.229
-HTTPS сертификат нельзя сразу выпускать(так сказал регистратор)
-возможно его можно выпустить завтра.
-
-Старые ссылки (если не обновится ДНС, то должен быть доступен по ним)
 ## Ссылка на frontend [https://fortuns.ml]
 ## Ссылка на backend(api)  [https://api.fortuns.ml]
 
@@ -41,7 +33,6 @@ HTTPS сертификат нельзя сразу выпускать(так с�
 
 Склонируйте гит-репозиторий
 >`git clone git@github.com:vadimobruchnikov/news-explorer-api.github.io.git`
->`git clone https://github.com/vadimobruchnikov/news-explorer-api.git`
 
 Установите npm-зависимости
 >`npm install`
