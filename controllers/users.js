@@ -97,8 +97,11 @@ module.exports.login = (req, res, next) => {
 
   return Users.findUserByCredentials(email, password, next)
     .then((user) => {
+      if (!user) {
+        throw new NotFoundError(ErrorMessages.NO_USER_ERROR);
+      }
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : secretKey, { expiresIn: '7d' });
-      res.cookie('jwt2', token, { maxAge: 3600000 * 24 * 7, httpOnly: true, sameSite: true });
+      res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true, sameSite: true });
       res.cookie('username', user.name, { maxAge: 3600000 * 24 * 7, httpOnly: true, sameSite: true });
       res.end();
     })
