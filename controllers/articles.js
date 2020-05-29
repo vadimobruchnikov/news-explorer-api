@@ -12,8 +12,9 @@ const { ErrorMessages } = require('../resources/response-messages');
  * @param {Object} next - следующий обработчик
  */
 const getArticles = (req, res, next) => {
-  // Добавить условие владельца
-  Articles.find({})
+  // Условие по владельцу
+  const owner = req.user._id;
+  Articles.find({owner: owner})
     // TODO: Проверить на пустое значение
     .then((articles) => res.send({ data: articles }))
     .catch(next);
@@ -31,10 +32,18 @@ const createArticle = (req, res, next) => {
   const {
     keyword, title, text, date, source, link, image,
   } = req.body;
-  Articles.create({
-    keyword, title, text, date, source, link, image, owner,
-  })
-    .then((article) => res.send({ data: article }))
+  Articles.find({source: source, link:link, owner:owner})
+    .then((articles) => {
+		if(articles.length > 0) {
+	 		return res.send({ data: articles });
+	    } else {
+ 			Articles.create({
+    			keyword, title, text, date, source, link, image, owner
+  			})
+    		.then((article) => res.send({ data: article }))
+    		.catch(next);
+		}
+	})
     .catch(next);
 };
 

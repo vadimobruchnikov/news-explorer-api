@@ -67,4 +67,6 @@ const articleSchema = new mongoose.Schema({
 
 });
 
+articleSchema.index({owner: 1, link: 1}, {unique: true});
+
 module.exports = mongoose.model('article', articleSchema);

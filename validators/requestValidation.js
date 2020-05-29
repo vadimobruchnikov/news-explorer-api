@@ -28,9 +28,14 @@ const saveArticleValidationSettings = celebrate({
     source: Joi.string().required().min(2),
     link: Joi.string().required().min(5)
       // TODO Заменить на регулярку
-      .uri({ allowRelative: true }),
+      // .uri({ allowRelative: true }),
+      //.uri(),
+      .regex(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/),
+	  //.regex(/https?:\/\/(?:[-\w]+\.)?([-\w]+)\.\w+(?:\.\w+)?\/?.*/),
     image: Joi.string().required().min(5)
-      .uri({ allowRelative: true })
+      //.uri({ allowRelative: true })
+      .uri(),	 
+      //.regex(/https?:\/\/(?:[-\w]+\.)?([-\w]+)\.\w+(?:\.\w+)?\/?.*/)
   }).unknown(true),
 });
 
