@@ -1,8 +1,74 @@
 /* eslint-disable consistent-return */
 const Articles = require('../models/article');
 const NotFoundError = require('../errors/not-found-error');
+const BadRequestError = require('../errors/bad-request-error');
 const ForbiddenError = require('../errors/forbidden-error');
 const { ErrorMessages } = require('../resources/response-messages');
+
+const getNewsArticles = (req, res, next) => {
+
+  // ?q=${options.newsQuery}&from=${options.dateFrom}&to=${options.dateTo}&language=ru&pageSize=100&apiKey=${this.newsApiKey}
+  const dateFrom = req.query.from || undefined;
+  const dateTo = req.query.to || undefined;
+  let pageSize = req.query.pageSize || 20;
+  let searchQuery = req.query.q || undefined;
+  let selectObj = {};
+  if (searchQuery) {
+    const searchRegExp = new RegExp(`.*${searchQuery}.*`,'i');
+    selectObj = { 
+      $or : [ 
+        { "keyword" : { $regex: searchRegExp } }, 
+        { "title" : { $regex: searchRegExp } }, 
+        { "text" : { $regex: searchRegExp } } 
+      ] 
+    };
+  }
+  Articles.find(selectObj)
+    // TODO: Проверить на пустое значение
+    .select('-_id')
+    .select('-owner')
+    .select('-__v')
+    .select('-createdAt')
+    .limit(parseInt(pageSize))
+    .then((articles) => {
+      // преобразуем к виду newsapi.org
+      let newsArr = articles.map((element) => {
+        element._doc.description = element.text;
+        delete element._doc.text;
+        element._doc.url = element.link;
+        element._doc.source = {
+          name: element.source
+        };
+        delete element._doc.link;
+        element._doc.urlToImage = element.image;
+        delete element._doc.image;
+        delete element.keyword;
+        element._doc.publishedAt = element.date;
+        return element;
+      });
+      res.send({ status: "ok", articles: newsArr });
+    })
+    .catch(next);
+};
+
+const checkNewsArticles = (req, res, next) => {
+  const owner = req.user._id;
+  const body = req.body;
+  if (body.links) {
+    //const selectLinks = JSON.stringify(body.links)
+    // проверить формат ссылок
+    //const searchRegExp = new RegExp(`.*${searchQuery}.*`,'i');
+    //    { "keyword" : { $regex: searchRegExp } }, 
+    
+	Articles.find({ $or : body.links, owner: owner }, { link: 1 })
+    .select('-_id')
+    .then((articles) => res.send({ data: articles }))
+    .catch(next);
+  	// res.status(200).send(body);
+  } else {
+      throw new BadRequestError(`${ErrorMessages.BAD_REQUEST_ERROR} `);
+  }
+};
 
 /**
  * Возвращает массив (своих) новостей
@@ -14,7 +80,7 @@ const { ErrorMessages } = require('../resources/response-messages');
 const getArticles = (req, res, next) => {
   // Условие по владельцу
   const owner = req.user._id;
-  Articles.find({owner: owner})
+  Articles.find({ owner: owner})
     // TODO: Проверить на пустое значение
     .then((articles) => res.send({ data: articles }))
     .catch(next);
@@ -34,13 +100,19 @@ const createArticle = (req, res, next) => {
   } = req.body;
   Articles.find({source: source, link:link, owner:owner})
     .then((articles) => {
-		if(articles.length > 0) {
-	 		return res.send({ data: articles });
+      if(articles.length > 0) {
+	        // если карточка уже есть, то удаляем ее
+			const articleId = articles[0]._id;
+			Articles.findByIdAndRemove(articleId)
+            .then((deletedArticle) => res.send({ data: deletedArticle, status: 'deleted' }))
+            .catch(next);
+	 		// return res.send({ data: articles });
 	    } else {
+			// или создаем
  			Articles.create({
     			keyword, title, text, date, source, link, image, owner
   			})
-    		.then((article) => res.send({ data: article }))
+    		.then((article) => res.send({ data: article, status: 'created' }))
     		.catch(next);
 		}
 	})
@@ -94,5 +166,5 @@ const deleteArticle = (req, res, next) => {
 };
 
 module.exports = {
-  getArticles, createArticle, getArticle, deleteArticle,
+  getArticles, createArticle, getArticle, deleteArticle, getNewsArticles, checkNewsArticles,
 };

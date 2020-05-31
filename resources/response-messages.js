@@ -17,6 +17,7 @@ module.exports.ErrorMessages = {
   EMAIL_IS_INCORRECT_ERROR: 'Значение не является корректным Email-ом',
   USER_OR_PASS_NOT_FOUND_ERROR: 'Неправильные почта или пароль',
   SERVER_ERROR: 'На сервере произошла ошибка',
+  BAD_REQUEST_ERROR: 'Неправильный формат запроса',
   MONGO_CONNECTION_ERROR: 'MongoDB database connection error',
 };
 

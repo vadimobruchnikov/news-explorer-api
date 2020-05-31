@@ -7,11 +7,17 @@ const { createUser, login, logout } = require('../controllers/users');
 const { auth } = require('../middlewares/auth');
 const notFoundError = require('../middlewares/not-found-error');
 
+const { getNewsArticles } = require('../controllers/articles');
+
 // router.get('/crash-test', crashTest); // TODO Убрать после отладки!
 // роуты не требующие авторизации
 router.post('/signin', signinInValidationSettings, login); // авторизация
 router.post('/signup', signupInValidationSettings, createUser); // регистрация
 router.post('/signout', logout); // выход
+
+// сервис отдающий статьи
+router.get('/news-articles', getNewsArticles);
+
 router.use(auth);
 router.use(usersRoute); // /users
 router.use(articlesRoute); // /articles
