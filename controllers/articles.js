@@ -27,34 +27,37 @@ const getNewsArticles = (req, res, next) => {
       ],
     };
   }
-  Articles.find(selectObj)
-    // TODO: Проверить на пустое значение
-    .select('-_id')
-    .select('-owner')
-    .select('-__v')
-    .select('-createdAt')
-    .select('-keyword')
-    .limit(pageSize)
-    .then((articles) => {
-      // преобразуем к виду newsapi.org
-      const newsArr = articles.map((element) => {
-        // корректно ли так переопределять элементы?
-        element._doc.description = element.text;
-        delete element._doc.text;
-        element._doc.url = element.link;
-        element._doc.source = {
-          name: element.source,
-        };
-        delete element._doc.link;
-        element._doc.urlToImage = element.image;
-        delete element._doc.image;
-        delete element.keyword;
-        element._doc.publishedAt = element.date;
-        return element;
-      });
-      res.send({ status: 'ok', articles: newsArr });
-    })
-    .catch(next);
+  if (selectObj) {
+    Articles.find(selectObj)
+      .select('-_id')
+      .select('-owner')
+      .select('-__v')
+      .select('-createdAt')
+      .select('-keyword')
+      .limit(pageSize)
+      .then((articles) => {
+        // преобразуем к виду newsapi.org
+        const newsArr = articles.map((element) => {
+          // корректно ли так переопределять элементы?  /* no-param-reassign */
+          element._doc.description = element.text;
+          delete element._doc.text;
+          element._doc.url = element.link;
+          element._doc.source = {
+            name: element.source,
+          };
+          delete element._doc.link;
+          element._doc.urlToImage = element.image;
+          delete element._doc.image;
+          delete element.keyword;
+          element._doc.publishedAt = element.date;
+          return element;
+        });
+        res.send({ status: 'ok', articles: newsArr });
+      })
+      .catch(next);
+  } else {
+    throw new BadRequestError(`${ErrorMessages.BAD_REQUEST_ERROR} `);
+  }
 };
 
 const checkNewsArticles = (req, res, next) => {

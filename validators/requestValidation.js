@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 const {
   celebrate, Joi,
 } = require('celebrate');
@@ -12,6 +13,7 @@ const signinInValidationSettings = celebrate({
 const signupInValidationSettings = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
+    // eslint-disable-next-line max-len
     // avatar: Joi.string().required().max(50).regex(/https?:\/\/(?:[-\w]+\.)?([-\w]+)\.\w+(?:\.\w+)?\/?.*/),
     // avatar: Joi.string().required().max(50).uri({ allowRelative: true }),
     email: Joi.string().required().max(120).email(),
@@ -27,15 +29,15 @@ const saveArticleValidationSettings = celebrate({
     date: Joi.date().iso().required(),
     source: Joi.string().required().min(2),
     link: Joi.string().required().min(5)
-      // TODO Заменить на регулярку
-      // .uri({ allowRelative: true }),
-      //.uri(),
+    // TODO Заменить на регулярку
+    // .uri({ allowRelative: true }),
+    // .uri(),
       .regex(/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/),
-	  //.regex(/https?:\/\/(?:[-\w]+\.)?([-\w]+)\.\w+(?:\.\w+)?\/?.*/),
+    // .regex(/https?:\/\/(?:[-\w]+\.)?([-\w]+)\.\w+(?:\.\w+)?\/?.*/),
     image: Joi.string().required().min(5)
-      //.uri({ allowRelative: true })
-      .uri(),	 
-      //.regex(/https?:\/\/(?:[-\w]+\.)?([-\w]+)\.\w+(?:\.\w+)?\/?.*/)
+      // .uri({ allowRelative: true })
+      .uri(),
+    // .regex(/https?:\/\/(?:[-\w]+\.)?([-\w]+)\.\w+(?:\.\w+)?\/?.*/)
   }).unknown(true),
 });
 

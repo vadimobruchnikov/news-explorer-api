@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
-/* eslint-disable object-curly-newline */
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Users = require('../models/user');
@@ -79,7 +79,7 @@ module.exports.updateUser = (req, res, next) => {
         throw new NotFoundError(ErrorMessages.NO_USER_ERROR);
       }
       // TODO: Проверить права
-      return res.send({ user: user });
+      return res.send({ user });
     })
     .catch(next);
 };
@@ -103,7 +103,7 @@ module.exports.login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : secretKey, { expiresIn: '7d' });
       res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true, sameSite: true });
       res.cookie('username', user.name, { maxAge: 3600000 * 24 * 7, httpOnly: true, sameSite: true });
-      //res.end();
+      // res.end();
       return res.send({ jwt: token, username: user.name });
     })
     .catch(next);
