@@ -1,4 +1,6 @@
-/* eslint-disable consistent-return */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-param-reassign */
+
 const Articles = require('../models/article');
 const NotFoundError = require('../errors/not-found-error');
 const BadRequestError = require('../errors/bad-request-error');
@@ -6,21 +8,23 @@ const ForbiddenError = require('../errors/forbidden-error');
 const { ErrorMessages } = require('../resources/response-messages');
 
 const getNewsArticles = (req, res, next) => {
-
-  // ?q=${options.newsQuery}&from=${options.dateFrom}&to=${options.dateTo}&language=ru&pageSize=100&apiKey=${this.newsApiKey}
-  const dateFrom = req.query.from || undefined;
-  const dateTo = req.query.to || undefined;
-  let pageSize = req.query.pageSize || 20;
-  let searchQuery = req.query.q || undefined;
+  // Формат ссылки
+  // ?q=${options.newsQuery} &from=${options.dateFrom} &to=${options.dateTo}
+  // &language=ru &pageSize=100 &apiKey=${this.newsApiKey}
+  // Когда будет много статей доделать работу с датами
+  // const dateFrom = req.query.from || undefined;
+  // const dateTo = req.query.to || undefined;
+  const pageSize = parseInt(req.query.pageSize, 10) || 20;
+  const searchQuery = req.query.q || undefined;
   let selectObj = {};
   if (searchQuery) {
-    const searchRegExp = new RegExp(`.*${searchQuery}.*`,'i');
-    selectObj = { 
-      $or : [ 
-        { "keyword" : { $regex: searchRegExp } }, 
-        { "title" : { $regex: searchRegExp } }, 
-        { "text" : { $regex: searchRegExp } } 
-      ] 
+    const searchRegExp = new RegExp(`.*${searchQuery}.*`, 'i');
+    selectObj = {
+      $or: [
+        { keyword: { $regex: searchRegExp } },
+        { title: { $regex: searchRegExp } },
+        { text: { $regex: searchRegExp } },
+      ],
     };
   }
   Articles.find(selectObj)
@@ -29,15 +33,17 @@ const getNewsArticles = (req, res, next) => {
     .select('-owner')
     .select('-__v')
     .select('-createdAt')
-    .limit(parseInt(pageSize))
+    .select('-keyword')
+    .limit(pageSize)
     .then((articles) => {
       // преобразуем к виду newsapi.org
-      let newsArr = articles.map((element) => {
+      const newsArr = articles.map((element) => {
+        // корректно ли так переопределять элементы?
         element._doc.description = element.text;
         delete element._doc.text;
         element._doc.url = element.link;
         element._doc.source = {
-          name: element.source
+          name: element.source,
         };
         delete element._doc.link;
         element._doc.urlToImage = element.image;
@@ -46,27 +52,27 @@ const getNewsArticles = (req, res, next) => {
         element._doc.publishedAt = element.date;
         return element;
       });
-      res.send({ status: "ok", articles: newsArr });
+      res.send({ status: 'ok', articles: newsArr });
     })
     .catch(next);
 };
 
 const checkNewsArticles = (req, res, next) => {
   const owner = req.user._id;
-  const body = req.body;
+  const { body } = req;
   if (body.links) {
-    //const selectLinks = JSON.stringify(body.links)
+    // const selectLinks = JSON.stringify(body.links)
     // проверить формат ссылок
-    //const searchRegExp = new RegExp(`.*${searchQuery}.*`,'i');
-    //    { "keyword" : { $regex: searchRegExp } }, 
-    
-	Articles.find({ $or : body.links, owner: owner }, { link: 1 })
-    .select('-_id')
-    .then((articles) => res.send({ data: articles }))
-    .catch(next);
-  	// res.status(200).send(body);
+    // const searchRegExp = new RegExp(`.*${searchQuery}.*`,'i');
+    //    { "keyword" : { $regex: searchRegExp } },
+
+    Articles.find({ $or: body.links, owner }, { link: 1 })
+      .select('-_id')
+      .then((articles) => res.send({ data: articles }))
+      .catch(next);
+    // res.status(200).send(body);
   } else {
-      throw new BadRequestError(`${ErrorMessages.BAD_REQUEST_ERROR} `);
+    throw new BadRequestError(`${ErrorMessages.BAD_REQUEST_ERROR} `);
   }
 };
 
@@ -80,7 +86,7 @@ const checkNewsArticles = (req, res, next) => {
 const getArticles = (req, res, next) => {
   // Условие по владельцу
   const owner = req.user._id;
-  Articles.find({ owner: owner})
+  Articles.find({ owner })
     // TODO: Проверить на пустое значение
     .then((articles) => res.send({ data: articles }))
     .catch(next);
@@ -98,24 +104,24 @@ const createArticle = (req, res, next) => {
   const {
     keyword, title, text, date, source, link, image,
   } = req.body;
-  Articles.find({source: source, link:link, owner:owner})
+  Articles.find({ source, link, owner })
     .then((articles) => {
-      if(articles.length > 0) {
-	        // если карточка уже есть, то удаляем ее
-			const articleId = articles[0]._id;
-			Articles.findByIdAndRemove(articleId)
-            .then((deletedArticle) => res.send({ data: deletedArticle, status: 'deleted' }))
-            .catch(next);
-	 		// return res.send({ data: articles });
-	    } else {
-			// или создаем
- 			Articles.create({
-    			keyword, title, text, date, source, link, image, owner
-  			})
-    		.then((article) => res.send({ data: article, status: 'created' }))
-    		.catch(next);
-		}
-	})
+      if (articles.length > 0) {
+        // если карточка уже есть, то удаляем ее
+        const articleId = articles[0]._id;
+        Articles.findByIdAndRemove(articleId)
+          .then((deletedArticle) => res.send({ data: deletedArticle, status: 'deleted' }))
+          .catch(next);
+        // return res.send({ data: articles });
+      } else {
+        // или создаем
+        Articles.create({
+          keyword, title, text, date, source, link, image, owner,
+        })
+          .then((article) => res.send({ data: article, status: 'created' }))
+          .catch(next);
+      }
+    })
     .catch(next);
 };
 
